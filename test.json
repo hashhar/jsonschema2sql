@@ -1,0 +1,102 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "http://schemas.example.com/test.json/1",
+  "type": "object",
+  "title": "test",
+  "required": [
+    "action_date"
+  ],
+  "properties": {
+    "string_col": {
+      "type": "string"
+    },
+    "datetime_col": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "datetime_string_col": {
+      "type": "string",
+      "format": "date-time-string"
+    },
+    "date_col": {
+      "type": "string",
+      "format": "date"
+    },
+    "date_string_col": {
+      "type": "string",
+      "format": "date-string"
+    },
+    "time_col": {
+      "type": "string",
+      "format": "time"
+    },
+    "time_string_col": {
+      "type": "string",
+      "format": "time-string"
+    },
+    "decimal_string_col": {
+      "type": "string",
+      "format": "decimal",
+      "precision": 10,
+      "scale": 2
+    },
+    "double_col": {
+      "type": "number"
+    },
+    "double_double_col": {
+      "type": "number",
+      "format": "double"
+    },
+    "float_col": {
+      "type": "number",
+      "format": "float"
+    },
+    "decimal_col": {
+      "type": "number",
+      "format": "decimal",
+      "precision": 5,
+      "scale": 3
+    },
+    "action_date": {
+      "type": "integer"
+    },
+    "boolean_col": {
+      "type": "boolean"
+    },
+    "array_col": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "array_object_col": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "title": "The Halt_centers Schema",
+        "required": [],
+        "properties": {
+          "string_col": {
+            "type": "string"
+          },
+          "datetime_col": {
+            "type": "string",
+            "format": "date-time",
+            "timezone": "UTC"
+          }
+        }
+      }
+    },
+    "object_col": {
+      "type": "object",
+      "properties": {
+        "string_col": {
+          "type": "string"
+        },
+        "integer_col": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}
