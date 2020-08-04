@@ -2,6 +2,7 @@ import argparse
 import json
 import typing
 
+ROOT_IDENTIFIER_FIELD = "$schema"
 PROPERTIES_FIELD = "properties"
 TYPE_FIELD = "type"
 REQUIRED_FIELD = "required"
@@ -123,7 +124,7 @@ def generate_create_table(
     format_map = {
         "schema": schema,
         "table": table,
-        "columns": get_columns(jsonschema),
+        "columns": get_columns(None, jsonschema),
         "location": location,
         "partition_columns": ", ".join(partition_columns),
         "format": table_format,
@@ -133,28 +134,57 @@ def generate_create_table(
     return sql
 
 
-def get_columns(jsonschema: typing.Dict[str, typing.Any]) -> str:
-    columns_sql = ""
-    first = True
-    for field in jsonschema.get(PROPERTIES_FIELD):
-        # all columns except first have trailing comma and newline indent
-        if not first:
-            columns_sql += ",\n    "
+def get_columns(field: str, jsonschema: typing.Dict[str, typing.Any]) -> str:
+    # if we are at the root of schema (ie. $schema exists) we need to start from it's properties
+    if jsonschema.get(ROOT_IDENTIFIER_FIELD) is not None:
+        x = get_columns(field, jsonschema.get(PROPERTIES_FIELD))
+        print(x)
+        return x
 
-        columns_sql += "{}".format(
-            get_column_sql(field, jsonschema.get(PROPERTIES_FIELD).get(field))
-        )
-        first = False
-    return columns_sql
+    # if properties are available, we need to recurse again
+    if jsonschema.get(PROPERTIES_FIELD) is not None:
+        x = get_columns(field, jsonschema.get(PROPERTIES_FIELD))
+        print(x)
+        return x
+
+    # if we are within an object (ie. type doesn't exist), we need to iterate over all fields
+    if jsonschema.get(TYPE_FIELD) is None:
+        x = ""
+        for field in jsonschema:
+            x += get_columns(field, jsonschema[field])
+            x += ",\n"
+        print(x)
+        return x
+
+    # if we are within a field, we can create a column
+    key = (jsonschema[TYPE_FIELD], jsonschema.get(FORMAT_FIELD, None))
+    sql_type = JSON_TYPE_TO_SQL_TYPE[key]
+    x = "{field} {sql_type}".format(field=field, sql_type=sql_type)
+    print(x)
+    return x
+
+# def get_columns(jsonschema: typing.Dict[str, typing.Any]) -> str:
+#     columns_sql = ""
+#     first = True
+#     for field in jsonschema.get(PROPERTIES_FIELD):
+#         # all columns except first have trailing comma and newline indent
+#         if not first:
+#             columns_sql += ",\n    "
+
+#         columns_sql += "{}".format(
+#             get_column_sql(field, jsonschema.get(PROPERTIES_FIELD).get(field))
+#         )
+#         first = False
+#     return columns_sql
 
 
-def get_column_sql(field: str, jsonschema: typing.Dict[str, typing.Any]) -> str:
-    # create key to lookup matching SQL type
-    key = (jsonschema.get(TYPE_FIELD), jsonschema.get(FORMAT_FIELD, None))
+# def get_column_sql(field: str, jsonschema: typing.Dict[str, typing.Any]) -> str:
+#     # create key to lookup matching SQL type
+#     key = (jsonschema.get(TYPE_FIELD), jsonschema.get(FORMAT_FIELD, None))
 
-    sql_type = JSON_TYPE_TO_SQL_TYPE.get(key)
-    # TODO: for container SQL types (row and array) we need some more processing
-    return '"{field}" {sql_type}'.format(field=field, sql_type=sql_type)
+#     sql_type = JSON_TYPE_TO_SQL_TYPE.get(key)
+#     # TODO: for container SQL types (row and array) we need some more processing
+#     return '"{field}" {sql_type}'.format(field=field, sql_type=sql_type)
 
 
 if __name__ == "__main__":
