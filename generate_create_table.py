@@ -134,34 +134,38 @@ def generate_create_table(
     return sql
 
 
+# TODO: Refactor this method to return a list(column, column_sql). That will
+# allow post-processing to mark columns as NOT NULL etc. and also make it
+# easier to write tests
 def get_columns(field: str, jsonschema: typing.Dict[str, typing.Any]) -> str:
     # if we are at the root of schema (ie. $schema exists) we need to start from it's properties
     if jsonschema.get(ROOT_IDENTIFIER_FIELD) is not None:
-        x = get_columns(field, jsonschema.get(PROPERTIES_FIELD))
-        print(x)
-        return x
+        return get_columns(field, jsonschema.get(PROPERTIES_FIELD))
 
     # if properties are available, we need to recurse again
     if jsonschema.get(PROPERTIES_FIELD) is not None:
-        x = get_columns(field, jsonschema.get(PROPERTIES_FIELD))
-        print(x)
-        return x
+        sql = get_columns(field, jsonschema.get(PROPERTIES_FIELD))
+        # for nested fields we normalize the sql by removing newlines
+        sql = " ".join(sql.split())
+        return '"{field}" ROW({inner_columns})'.format(field=field, inner_columns=sql)
 
     # if we are within an object (ie. type doesn't exist), we need to iterate over all fields
     if jsonschema.get(TYPE_FIELD) is None:
-        x = ""
+        first = True
+        sql = ""
         for field in jsonschema:
-            x += get_columns(field, jsonschema[field])
-            x += ",\n"
-        print(x)
-        return x
+            if not first:
+                sql += ",\n    "
+            sql += get_columns(field, jsonschema[field])
+            first = False
+
+        return sql
 
     # if we are within a field, we can create a column
     key = (jsonschema[TYPE_FIELD], jsonschema.get(FORMAT_FIELD, None))
     sql_type = JSON_TYPE_TO_SQL_TYPE[key]
-    x = "{field} {sql_type}".format(field=field, sql_type=sql_type)
-    print(x)
-    return x
+    return '"{field}" {sql_type}'.format(field=field, sql_type=sql_type)
+
 
 # def get_columns(jsonschema: typing.Dict[str, typing.Any]) -> str:
 #     columns_sql = ""
