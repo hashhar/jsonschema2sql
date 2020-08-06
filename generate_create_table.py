@@ -150,9 +150,11 @@ def get_columns(field: str, jsonschema: typing.Dict[str, typing.Any]) -> str:
 
         # if we came here from within an array, field name is not needed
         if field:
-            return '"{field}" ROW({inner_columns})'.format(field=field, inner_columns=sql)
+            return '"{field}" ROW({inner_columns})'.format(
+                field=field, inner_columns=sql
+            )
         else:
-            return 'ROW({inner_columns})'.format(inner_columns=sql)
+            return "ROW({inner_columns})".format(inner_columns=sql)
 
     # if items are available, we are within an array and need to recurse again
     if jsonschema.get(ITEMS_FIELD) is not None:
@@ -178,11 +180,17 @@ def get_columns(field: str, jsonschema: typing.Dict[str, typing.Any]) -> str:
     key = (jsonschema[TYPE_FIELD], jsonschema.get(FORMAT_FIELD, None))
     sql_type = JSON_TYPE_TO_SQL_TYPE[key]
 
+    # if decimal, we need the type arguments too
+    if jsonschema.get(FORMAT_FIELD) == "decimal":
+        sql_type += "({precision}, {scale})".format(
+            precision=jsonschema.get(PRECISION_FIELD), scale=jsonschema.get(SCALE_FIELD)
+        )
+
     # if we came here from within an array, field name is not needed
     if field:
         return '"{field}" {sql_type}'.format(field=field, sql_type=sql_type)
     else:
-        return '{sql_type}'.format(sql_type=sql_type)
+        return "{sql_type}".format(sql_type=sql_type)
 
 
 # def get_columns(jsonschema: typing.Dict[str, typing.Any]) -> str:
