@@ -10,15 +10,15 @@ Schema](https://json-schema.org).
 
    ```sh
    $ # Or download just the Python script :)
-   $ git clone https://github.com/hashhar/jsonschema2prestosql.git
+   $ git clone https://github.com/hashhar/jsonschema2sql.git
    ```
 
 1. Run it against a schema
-   ([test.json](https://github.com/hashhar/jsonschema2prestosql/raw/master/test.json)
+   ([test.json](https://github.com/hashhar/jsonschema2sql/raw/master/test.json)
    is a sample schema present in the root of this repo).
 
    ```sh
-   $ python3 generate_create_table.py --jsonschema test.json \
+   $ python3 jsonschema2sql.py --jsonschema test.json \
        --table my_test_table \
        --schema my_test_db \
        --location 's3://my/test/bucket' \
@@ -69,7 +69,7 @@ script.
 
 I welcome you to use this tool (without any implied support contract
 :stuck_out_tongue:). In case you find any issues feel free to [create one on
-GitHub](https://github.com/hashhar/jsonschema2prestosql/issues/new).
+GitHub](https://github.com/hashhar/jsonschema2sql/issues/new).
 
 For feature requests keep the following expectations in mind (I am open to
 being persuaded otherwise):
@@ -87,7 +87,7 @@ being persuaded otherwise):
 ### Workflow
 
 For contributing changes I recommend to [open an
-issue](https://github.com/hashhar/jsonschema2prestosql/issues/new) before
+issue](https://github.com/hashhar/jsonschema2sql/issues/new) before
 implementing anything. That makes it more likely to avoid repeated effort and
 allows other people to see if somebody else is already working on an issue or
 not.
