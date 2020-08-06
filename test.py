@@ -29,5 +29,5 @@ expected_sql = """CREATE TABLE "default"."test_table" (
     format = 'PARQUET'
 )"""
 
-print(sql)
 assert sql == expected_sql
+print("** TESTS PASS! **")
