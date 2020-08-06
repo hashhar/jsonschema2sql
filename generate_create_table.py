@@ -193,30 +193,6 @@ def get_columns(field: str, jsonschema: typing.Dict[str, typing.Any]) -> str:
         return "{sql_type}".format(sql_type=sql_type)
 
 
-# def get_columns(jsonschema: typing.Dict[str, typing.Any]) -> str:
-#     columns_sql = ""
-#     first = True
-#     for field in jsonschema.get(PROPERTIES_FIELD):
-#         # all columns except first have trailing comma and newline indent
-#         if not first:
-#             columns_sql += ",\n    "
-
-#         columns_sql += "{}".format(
-#             get_column_sql(field, jsonschema.get(PROPERTIES_FIELD).get(field))
-#         )
-#         first = False
-#     return columns_sql
-
-
-# def get_column_sql(field: str, jsonschema: typing.Dict[str, typing.Any]) -> str:
-#     # create key to lookup matching SQL type
-#     key = (jsonschema.get(TYPE_FIELD), jsonschema.get(FORMAT_FIELD, None))
-
-#     sql_type = JSON_TYPE_TO_SQL_TYPE.get(key)
-#     # TODO: for container SQL types (row and array) we need some more processing
-#     return '"{field}" {sql_type}'.format(field=field, sql_type=sql_type)
-
-
 if __name__ == "__main__":
     args = parse_args()
 
