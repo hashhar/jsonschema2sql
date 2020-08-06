@@ -13,8 +13,9 @@ Schema](https://json-schema.org).
    $ git clone https://github.com/hashhar/jsonschema2prestosql.git
    ```
 
-1. Run it against a schema (`test.json` is a sample schema present in the root
-   of this repo).
+1. Run it against a schema
+   ([test.json](https://github.com/hashhar/jsonschema2prestosql/raw/master/test.json)
+   is a sample schema present in the root of this repo).
 
    ```sh
    $ python3 generate_create_table.py --jsonschema test.json \
@@ -25,7 +26,7 @@ Schema](https://json-schema.org).
        --partition-columns year month date
    ```
 
-   This generates below output.
+   This generates a `CREATE TABLE` DDL as below
 
    ```sql
    CREATE TABLE "my_test_db"."my_test_table" (
