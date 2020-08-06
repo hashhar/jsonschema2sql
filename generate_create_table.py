@@ -147,7 +147,20 @@ def get_columns(field: str, jsonschema: typing.Dict[str, typing.Any]) -> str:
         sql = get_columns(field, jsonschema.get(PROPERTIES_FIELD))
         # for nested fields we normalize the sql by removing newlines
         sql = " ".join(sql.split())
-        return '"{field}" ROW({inner_columns})'.format(field=field, inner_columns=sql)
+
+        # if we came here from within an array, field name is not needed
+        if field:
+            return '"{field}" ROW({inner_columns})'.format(field=field, inner_columns=sql)
+        else:
+            return 'ROW({inner_columns})'.format(inner_columns=sql)
+
+    # if items are available, we are within an array and need to recurse again
+    if jsonschema.get(ITEMS_FIELD) is not None:
+        # pass None as field name to prevent it from appearing in inner column sql
+        sql = get_columns(None, jsonschema.get(ITEMS_FIELD))
+        # for nested fields we normalize the sql by removing newlines
+        sql = " ".join(sql.split())
+        return '"{field}" array({inner_columns})'.format(field=field, inner_columns=sql)
 
     # if we are within an object (ie. type doesn't exist), we need to iterate over all fields
     if jsonschema.get(TYPE_FIELD) is None:
@@ -164,7 +177,12 @@ def get_columns(field: str, jsonschema: typing.Dict[str, typing.Any]) -> str:
     # if we are within a field, we can create a column
     key = (jsonschema[TYPE_FIELD], jsonschema.get(FORMAT_FIELD, None))
     sql_type = JSON_TYPE_TO_SQL_TYPE[key]
-    return '"{field}" {sql_type}'.format(field=field, sql_type=sql_type)
+
+    # if we came here from within an array, field name is not needed
+    if field:
+        return '"{field}" {sql_type}'.format(field=field, sql_type=sql_type)
+    else:
+        return '{sql_type}'.format(sql_type=sql_type)
 
 
 # def get_columns(jsonschema: typing.Dict[str, typing.Any]) -> str:
