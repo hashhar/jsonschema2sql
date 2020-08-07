@@ -123,6 +123,7 @@ def generate_create_table(
     # enclose each partition column in quotes
     partition_columns = ["'{}'".format(col) for col in partition_columns]
 
+    # TODO: should verify all partition_columns also exist in columns
     format_map = {
         "schema": schema,
         "table": table,

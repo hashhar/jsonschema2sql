@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-import generate_create_table
+import jsonschema2sql
 
-jsonschema = generate_create_table.load_schema("test.json")
-sql = generate_create_table.generate_create_table(
+jsonschema = jsonschema2sql.load_schema("test.json")
+sql = jsonschema2sql.generate_create_table(
     "test_table", "default", "s3://some-bucket/", ["ad"], "PARQUET", jsonschema
 )
 
@@ -24,7 +24,8 @@ expected_sql = """CREATE TABLE "default"."test_table" (
     "boolean_col" boolean,
     "array_col" array(varchar),
     "array_object_col" array(ROW("string_col" varchar, "datetime_col" timestamp)),
-    "object_col" ROW("string_col" varchar, "integer_col" bigint)
+    "object_col" ROW("string_col" varchar, "integer_col" bigint),
+    "ad" varchar
 ) WITH (
     external_location = 's3://some-bucket/',
     partitioned_by = ARRAY['ad'],

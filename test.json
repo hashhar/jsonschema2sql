@@ -97,6 +97,10 @@
           "type": "integer"
         }
       }
+    },
+    "ad": {
+      "type": "string",
+      "description": "partition column"
     }
   }
 }
