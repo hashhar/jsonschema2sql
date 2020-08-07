@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import argparse
 import json
 import typing
@@ -76,7 +78,7 @@ def parse_args() -> argparse.Namespace:
         "--partition-columns",
         dest="partition_columns",
         type=str,
-        action="append",
+        nargs='+',
         help="list of partition columns",
         required=False,
     )

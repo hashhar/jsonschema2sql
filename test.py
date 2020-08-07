@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import generate_create_table
 
 jsonschema = generate_create_table.load_schema("test.json")
