@@ -4,7 +4,7 @@ import jsonschema2sql
 
 jsonschema = jsonschema2sql.load_schema("test.json")
 sql = jsonschema2sql.generate_create_table(
-    "test_table", "default", "s3://some-bucket/", ["ad"], "PARQUET", jsonschema
+    "test_table", "default", "s3://some-bucket/", ["ad"], "PARQUET", False, jsonschema
 )
 
 expected_sql = """CREATE TABLE "default"."test_table" (
