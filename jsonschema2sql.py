@@ -31,6 +31,9 @@ JSON_TYPE_TO_SQL_TYPE = {
     ("number", "decimal"): "decimal",
     # integer
     ("integer", None): "bigint",
+    ("integer", "date-time"): "timestamp",
+    ("integer", "date"): "date",
+    ("integer", "time"): "time",
     # boolean
     ("boolean", None): "boolean",
     # array
