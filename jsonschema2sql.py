@@ -171,6 +171,9 @@ def get_columns(
 
         # if we came here from within an array, field name is not needed
         if field:
+            # sanitize fieldname is needed
+            if sanitize_fieldnames:
+                field = sanitize_fieldname(field)
             return '"{field}" ROW({inner_columns})'.format(
                 field=field, inner_columns=sql
             )
@@ -183,6 +186,9 @@ def get_columns(
         sql = get_columns(None, jsonschema.get(ITEMS_FIELD), sanitize_fieldnames)
         # for nested fields we normalize the sql by removing newlines
         sql = " ".join(sql.split())
+        # sanitize fieldname is needed
+        if sanitize_fieldnames:
+            field = sanitize_fieldname(field)
         return '"{field}" array({inner_columns})'.format(field=field, inner_columns=sql)
 
     # if we are within an object (ie. type doesn't exist), we need to iterate over all fields
