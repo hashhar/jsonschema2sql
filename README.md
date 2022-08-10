@@ -1,7 +1,7 @@
-# JSON Schema to Presto SQL
+# JSON Schema to Trino SQL
 
 This is a command line utility to generate `CREATE TABLE` statements compatible
-with [Presto](https://prestosql.io) from a table schema provided as [JSON
+with [Trino](https://trino.io) from a table schema provided as [JSON
 Schema](https://json-schema.org).
 
 ## Getting Started
@@ -80,7 +80,7 @@ being persuaded otherwise):
   the JSON Schema and not part of the standard JSON Schema and as such they
   might not work with other tools in the JSON Schema landscape.
 * The target system for the DDL is expected to be
-  [PrestoSQL](https://prestosql.io) and while the generated SQL might work on
+  [Trino](https://trino.io) and while the generated SQL might work on
   other systems they are explicitly unsupported (help welcome to implement
   dialects support).
 
@@ -101,7 +101,7 @@ not.
 
 ## Contact
 
-Join us on [PrestoSQL slack](https://prestosql.io/slack.html) for more about
-PrestoSQL. I can be found as `hashhar` over there.
+Join us on [Trino slack](https://trino.io/slack.html) for more about
+Trino. I can be found as `hashhar` over there.
 
 Create an issue in this repo or drop me an email (not that hard to find).
